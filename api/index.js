@@ -8,6 +8,8 @@ import roomsRoute from "./routes/rooms.js";
 import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
 import yaml from "yamljs";
+import cors from "cors";
+
 
 const swaggerSpec = yaml.load("./swagger/booking-swagger.yaml"); // Thay đổi đường dẫn của tài liệu Swagger YAML nếu cần thiết
 const app = express();
@@ -27,6 +29,7 @@ mongoose.connection.on("disconnected", () => {
 });
 
 //middlewares
+app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 
