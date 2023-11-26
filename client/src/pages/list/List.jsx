@@ -6,6 +6,7 @@ import { useState } from "react";
 import { format } from "date-fns";
 import { DateRange } from "react-date-range";
 import SearchItem from "../../components/searchItem/SearchItem";
+import useFetch from "../../hooks/useFetch";
 
 const List = () => {
   const location = useLocation();
@@ -14,6 +15,7 @@ const List = () => {
   const [openDate, setOpenDate] = useState(false);
   const [options] = useState(location.state.options);
 
+  const { data, loading, error, reFetch } = useFetch(`http://localhost:8800/api/hotel?city=${destination}`)
   return (
     <div>
       <Navbar />
