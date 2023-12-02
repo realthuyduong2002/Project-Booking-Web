@@ -13,14 +13,22 @@ import {
 import { useState } from "react";
 import useFetch from "../../hooks/useFetch"
 import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const Hotel = () => {
   const location = useLocation()
-  const id = location.split("/"[2])
+  console.log(location);
+
+  //const id = location.split("/"[2])
+  const id = location.pathname.split("/")[2];
+
+  //const { id } = useParams();
+
   const [slideNumber, setSlideNumber] = useState(0);
   const [open, setOpen] = useState(false);
 
-  const {data, loading, error} = useFetch(`hotels/${id}`)
+  const { data, loading, error } = useFetch(`hotels/${id}`)
+
 
   const photos = [
     {
