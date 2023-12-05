@@ -15,7 +15,6 @@ function App() {
         <Route path="/hotels" element={<List />} />
         <Route path="/hotels/:id" element={<Hotel />} />
         <Route path="/login" element={<Login />} />
-
       </Routes>
     </BrowserRouter>
   );
