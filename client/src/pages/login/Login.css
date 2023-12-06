@@ -1,5 +1,3 @@
-/* Login.css */
-
 .login {
     height: 100vh;
     display: flex;
@@ -8,22 +6,14 @@
 }
 
 .lContainer {
-    max-width: 400px;
-    width: 100%;
-    padding: 20px;
-    background-color: #ffffff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .lInput {
-    height: 40px;
+    height: 30px;
     padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
-    box-sizing: border-box;
 }
 
 .lButton {
@@ -34,22 +24,9 @@
     font-weight: bold;
     cursor: pointer;
     border-radius: 5px;
-    width: 100%;
-    transition: background-color 0.3s ease;
 }
 
 .lButton:disabled {
     background-color: #0071c28c;
     cursor: not-allowed;
-}
-
-.lButton:hover {
-    background-color: #005ea8;
-}
-
-/* Additional Styling for Error Message */
-span {
-    font-size: 14px;
-    margin-top: 5px;
-    display: block;
 }

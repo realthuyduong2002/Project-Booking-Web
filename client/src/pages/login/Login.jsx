@@ -1,9 +1,13 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Form, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "./Login.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import {
+  faCircleUser
+} from "@fortawesome/free-solid-svg-icons";
 const Login = () => {
   const [credentials, setCredentials] = useState({
     username: undefined,
@@ -32,13 +36,15 @@ const Login = () => {
 
   return (
     <div className="login">
-      <div className="lContainer">
+      <div className="lContainer" >
+        <FontAwesomeIcon icon={faCircleUser} />
         <input
           type="text"
           placeholder="username"
           id="username"
           onChange={handleChange}
           className="lInput"
+
         />
         <input
           type="password"
@@ -53,6 +59,7 @@ const Login = () => {
         {error && <span>{error.message}</span>}
       </div>
     </div>
+
   );
 };
 
