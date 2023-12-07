@@ -127,200 +127,134 @@ paths:
           description: "Bad request."
         500:
           description: "Internal server error."
-  /api/hotels:
-    get:
-      tags:
-        - "hotels"
-      summary: Get all hotels
-      responses:
-        "200":
-          description: Successful response
-          content:
-            application/json:
-              example:
-                - id: 1
-                  name: "Hotel A"
-                  type: "Luxury"
-                  city: "City A"
-                  address: "Address A"
-                  distance: "5 km"
-                  photos: ["url1", "url2"]
-                  title: "Hotel A Title"
-                  desc: "Description of Hotel A"
-                  rating: 4.5
-                  rooms: ["Room1", "Room2"]
-                  cheapestPrice: 150
-                  featured: true
 
+  /api/hotels:
     post:
+      summary: Create a new hotel
       tags:
         - "hotels"
-      summary: Create a new hotel
-      security:
-        - cookieAuth: []
       requestBody:
+        description: Hotel details
+        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: "The hotel's name."
-                type:
-                  type: string
-                  description: "The hotel's type."
-                city:
-                  type: string
-                  description: "The hotel's city."
-                address:
-                  type: string
-                  description: "The hotel's address."
-                distance:
-                  type: string
-                  description: "The hotel's distance from the city center."
-                photos:
-                  type: array
-                  description: "The hotel's photos."
-                title:
-                  type: string
-                  description: "The hotel's title."
-                desc:
-                  type: string
-                  description: "The hotel's description."
-                rating:
-                  type: number
-                  description: "The hotel's rating."
-                rooms:
-                  type: array
-                  description: "The hotel's rooms."
-                cheapestPrice:
-                  type: number
-                  description: "The hotel's cheapest price."
-                featured:
-                  type: boolean
-                  description: "Whether the hotel is featured."
+              $ref: "#/components/schemas/Hotel"
       responses:
         "200":
-          description: Successful response
+          description: Successfully created hotel
           content:
             application/json:
-              example:
-                id: 2
-                name: "New Hotel"
-                type: "Standard"
-                city: "City B"
-                address: "Address B"
-                distance: "3 km"
-                photos: ["url3", "url4"]
-                title: "New Hotel Title"
-                desc: "Description of New Hotel"
-                rating: 4.0
-                rooms: ["RoomA", "RoomB"]
-                cheapestPrice: 120
-                featured: false
-
-  /api/hotels/{id}:
+              schema:
+                $ref: "#/components/schemas/Hotel"
     get:
+      summary: Get all hotels
       tags:
         - "hotels"
-      summary: Get a specific hotel by ID
+      responses:
+        200:
+          description: Successfully retrieved list of hotels
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Hotel"
+
+  /api/hotels/find/{id}:
+    get:
+      summary: Get hotel details by ID
+      tags:
+        - "hotels"
       parameters:
         - name: id
           in: path
           required: true
-          description: ID of the hotel
+          description: ID require
           schema:
             type: string
       responses:
-        "200":
-          description: Successful response
+        200:
+          description: Successfully retrieved hotel details
           content:
             application/json:
-              example:
-                id: 1
-                name: "Hotel A"
-                type: "Luxury"
-                city: "City A"
-                address: "Address A"
-                distance: "5 km"
-                photos: ["url1", "url2"]
-                title: "Hotel A Title"
-                desc: "Description of Hotel A"
-                rating: 4.5
-                rooms: ["Room1", "Room2"]
-                cheapestPrice: 150
-                featured: true
-
+              schema:
+                $ref: "#/components/schemas/Hotel"
+  /api/hotels/{id}:
     put:
+      summary: Update hotel details by ID
       tags:
         - "hotels"
-      summary: Update a specific hotel by ID
-      security:
-        - cookieAuth: []
       parameters:
-        - name: id
-          in: path
+        - name: "id"
+          in: "path"
           required: true
-          description: ID of the hotel
+          description: The ID of the hotel
           schema:
             type: string
+        - in: "header"
+          name: "Authorization"
+          required: true
+          schema:
+            type: string
+          description: Bearer token for authentication
       requestBody:
+        description: Updated hotel details
+        required: true
         content:
           application/json:
-            example:
-              name: "Updated Hotel"
-              type: "Luxury"
-              city: "City A"
-              address: "Updated Address"
-              distance: "5 km"
-              photos: ["url1", "url2"]
-              title: "Updated Hotel Title"
-              desc: "Updated Description"
-              rating: 4.8
-              rooms: ["Room1", "Room2", "Room3"]
-              cheapestPrice: 180
-              featured: true
+            schema:
+              $ref: "#/components/schemas/Hotel"
       responses:
-        "200":
-          description: Successful response
+        200:
+          description: Successfully updated hotel details
           content:
             application/json:
-              example:
-                id: 1
-                name: "Updated Hotel"
-                type: "Luxury"
-                city: "City A"
-                address: "Updated Address"
-                distance: "5 km"
-                photos: ["url1", "url2"]
-                title: "Updated Hotel Title"
-                desc: "Updated Description"
-                rating: 4.8
-                rooms: ["Room1", "Room2", "Room3"]
-                cheapestPrice: 180
-                featured: true
+              schema:
+                $ref: "#/components/schemas/Hotel"
 
     delete:
+      summary: Delete hotel by ID
       tags:
         - "hotels"
-      summary: Delete a specific hotel by ID
-      security:
-        - cookieAuth: []
       parameters:
-        - name: id
-          in: path
+        - name: "id"
+          in: "path"
           required: true
-          description: ID of the hotel
+          description: The ID of the hotel
+          schema:
+            type: string
+        - in: "header"
+          name: "Authorization"
+          required: true
+          schema:
+            type: string
+          description: Bearer token for authentication
+      responses:
+        200:
+          description: Hotel successfully deleted
+  /api/hotels/rooms/{id}:
+    get:
+      summary: Get rooms of a specific hotel
+      tags:
+        - "hotels"
+      parameters:
+        - name: "hotelID"
+          in: "path"
+          required: true
+          description: The ID of the hotel
           schema:
             type: string
       responses:
-        "200":
-          description: Successful response
+        200:
+          description: Successfully retrieved list of rooms for the hotel
           content:
             application/json:
-              example: "Hotel with ID 1 has been deleted"
-
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Room"
+  /api/rooms/{hotelid}:
     post:
       tags:
         - "rooms"
@@ -626,3 +560,58 @@ components:
         - username
         - email
         - password
+    Hotel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the hotel.
+        type:
+          type: string
+          description: The type of the hotel (e.g., hotel, apartment, resort).
+        city:
+          type: string
+          description: The city where the hotel is located.
+        address:
+          type: string
+          description: The address of the hotel.
+        distance:
+          type: string
+          description: The distance of the hotel from a specific point.
+        photos:
+          type: array
+          items:
+            type: string
+          description: An array of photo URLs for the hotel.
+        title:
+          type: string
+          description: The title of the hotel.
+        desc:
+          type: string
+          description: A description of the hotel.
+        rating:
+          type: number
+          minimum: 0
+          maximum: 5
+          description: The rating of the hotel (between 0 and 5).
+        rooms:
+          type: array
+          items:
+            type: string
+          description: An array of Room IDs associated with the hotel.
+        cheapestPrice:
+          type: number
+          description: The cheapest price for the hotel.
+        featured:
+          type: boolean
+          default: false
+          description: Whether the hotel is featured or not.
+      required:
+        - name
+        - type
+        - city
+        - address
+        - distance
+        - title
+        - desc
+        - cheapestPrice

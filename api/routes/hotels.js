@@ -7,11 +7,11 @@ import { getHotelRooms, countByCity, countByType, createHotel, deleteHotel, getH
 const router = express.Router();
 
 //CREATE
-router.post("/", verifyAdmin, createHotel);
+router.post("/", createHotel);
 //UPDATE
 router.put("/:id", verifyAdmin, updateHotel)
 //DELETE
-router.delete("/:id", verifyAdmin, deleteHotel)
+router.delete("/:id", deleteHotel)
 //GET
 router.get("/find/:id", getHotel)
 //GET ALL
