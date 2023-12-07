@@ -320,3 +320,309 @@ paths:
           content:
             application/json:
               example: "Hotel with ID 1 has been deleted"
+
+    post:
+      tags:
+        - "rooms"
+      summary: Create a new room.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the room to be updated.
+          schema:
+            type: string
+      requestBody:
+        description: Updated room object.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Room"
+
+      responses:
+        200:
+          description: Successfully created room.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized.
+
+  /api/rooms/{id}/{hotelid}:
+    delete:
+      tags:
+        - "rooms"
+      summary: Delete a room by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the room to be deleted.
+          schema:
+            type: string
+        - in: path
+          name: hotelid
+          required: true
+          description: The ID of the hotel from which the room should be deleted.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Room has been deleted.
+        401:
+          description: Unauthorized
+        404:
+          description: Room not found
+
+  /api/rooms/{id}:
+    put:
+      tags:
+        - "rooms"
+      summary: Update a room by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the room to be updated.
+          schema:
+            type: string
+      requestBody:
+        description: Updated room object.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Room"
+      responses:
+        200:
+          description: Successfully updated room.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized
+    get:
+      tags:
+        - "rooms"
+      summary: Get a room by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the room to be retrieved.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully retrieved room.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        401:
+          description: Unauthorized
+        404:
+          description: Room not found
+  /api/rooms:
+    get:
+      tags:
+        - "rooms"
+      summary: Get all rooms.
+      operationId: getAllRooms
+      responses:
+        200:
+          description: Successfully retrieved all rooms.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Room"
+        401:
+          description: Unauthorized
+  /api/rooms/{id}/availability:
+    put:
+      tags:
+        - "rooms"
+      summary: Update room availability by ID.
+      operationId: updateRoomAvailabilityById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the room to update availability.
+          schema:
+            type: string
+      requestBody:
+        description: Updated availability object.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dates:
+                  type: array
+                  items:
+                    type: string
+                    format: date
+              required:
+                - dates
+      responses:
+        200:
+          description: Room availability has been updated.
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized
+        404:
+          description: Room not found
+  /api/users/{id}:
+    put:
+      tags:
+        - "users"
+      summary: Update a user by ID.
+      operationId: updateUserById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the user to be updated.
+          schema:
+            type: string
+      requestBody:
+        description: Updated user object.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: Successfully updated user.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized
+        404:
+          description: User not found
+
+    delete:
+      tags:
+        - "users"
+      summary: Delete a user by ID.
+      operationId: deleteUserById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the user to be deleted.
+          schema:
+            type: string
+      responses:
+        200:
+          description: User has been deleted.
+        401:
+          description: Unauthorized
+        404:
+          description: User not found
+    get:
+      tags:
+        - "users"
+      summary: Get a user by ID.
+      operationId: getUserById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the user to be retrieved.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully retrieved user.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        401:
+          description: Unauthorized
+        404:
+          description: User not found
+
+  /api/users:
+    get:
+      tags:
+        - "users"
+      summary: Get all users.
+      operationId: getAllUsers
+      responses:
+        200:
+          description: Successfully retrieved all users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        401:
+          description: Unauthorized
+components:
+  schemas:
+    Room:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the room.
+        price:
+          type: number
+          description: The price of the room.
+        maxPeople:
+          type: number
+          description: The maximum number of people the room can accommodate.
+        desc:
+          type: string
+          description: The description of the room.
+        roomNumbers:
+          type: array
+          description: List of room numbers with their unavailable dates.
+          items:
+            type: object
+            properties:
+              number:
+                type: number
+                description: The room number.
+              unavailableDates:
+                type: array
+                items:
+                  type: string
+                  format: date
+                description: List of dates when the room is unavailable.
+
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        isAdmin:
+          type: boolean
+      required:
+        - username
+        - email
+        - password

@@ -1,5 +1,6 @@
 import useFetch from "../../hooks/useFetch";
 import "./featured.css";
+import { Link } from "react-router-dom";
 
 const Featured = () => {
   const { data, loading, error } = useFetch("http://localhost:8800/api/hotels/countByCity?cities=paris,marid,london");
