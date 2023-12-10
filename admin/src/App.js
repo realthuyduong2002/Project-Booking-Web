@@ -17,11 +17,12 @@ function App() {
   const { darkMode } = useContext(DarkModeContext);
 
   const ProtectedRoute = ({ children }) => {
-    const { user } = useContext(AuthContext)
+    const { user } = useContext(AuthContext);
 
     if (!user) {
       return <Navigate to="/login" />;
     }
+
     return children;
   };
 
@@ -40,24 +41,29 @@ function App() {
               }
             />
             <Route path="users">
-              <Route index element={
-              <ProtectedRoute>
-                  <List columns = {userColumns}/>
-                </ProtectedRoute>} />
-              <Route 
-              path=":userId" 
-              element={
-              <ProtectedRoute>
-                  <Single />
-                </ProtectedRoute>
-              } 
+              <Route
+                index
+                element={
+                  <ProtectedRoute>
+                    <List columns={userColumns} />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path=":userId"
+                element={
+                  <ProtectedRoute>
+                    <Single />
+                  </ProtectedRoute>
+                }
               />
               <Route
                 path="new"
                 element={
-                <ProtectedRoute>
-                  <New inputs={userInputs} title="Add New User" />
-                  </ProtectedRoute>}
+                  <ProtectedRoute>
+                    <New inputs={userInputs} title="Add New User" />
+                  </ProtectedRoute>
+                }
               />
             </Route>
             <Route path="hotels">
@@ -81,7 +87,7 @@ function App() {
                 path="new"
                 element={
                   <ProtectedRoute>
-                    <NewHotel  />
+                    <NewHotel />
                   </ProtectedRoute>
                 }
               />
@@ -107,7 +113,7 @@ function App() {
                 path="new"
                 element={
                   <ProtectedRoute>
-                    <NewRoom  />
+                    <NewRoom />
                   </ProtectedRoute>
                 }
               />

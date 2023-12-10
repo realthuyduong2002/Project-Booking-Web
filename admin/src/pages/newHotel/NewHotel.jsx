@@ -6,11 +6,13 @@ import { useState } from "react";
 import { hotelInputs } from "../../formSource";
 import useFetch from "../../hooks/useFetch";
 import axios from "axios";
+import Select from "react-select";
 
 const NewHotel = () => {
   const [files, setFiles] = useState("");
   const [info, setInfo] = useState({});
   const [rooms, setRooms] = useState([]);
+  const [errors, setErrors] = useState({});
 
   const { data, loading, error } = useFetch("http://localhost:8800/api/rooms");
 
@@ -18,18 +20,21 @@ const NewHotel = () => {
     setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
-  const handleSelect = (e) => {
-    const value = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setRooms(value);
+  const handleSelect = (selectedOptions) => {
+    setRooms(selectedOptions.map(option => option.value));
   };
 
   console.log(files)
 
   const handleClick = async (e) => {
     e.preventDefault();
+
+    // Validate the form
+    const validationErrors = validateForm(info);
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
     try {
       const list = await Promise.all(
         Object.values(files).map(async (file) => {
@@ -55,13 +60,56 @@ const NewHotel = () => {
       await axios.post("http://localhost:8800/api/hotels", newhotel);
     } catch (err) { console.log(err) }
   };
+  const validateForm = (formData) => {
+    const errors = {};
+
+    if (!formData.title) {
+      errors.title = "Title is required!";
+    }
+
+    if (!formData.type) {
+      errors.type = "Type is required!";
+    }
+
+    if (!formData.address) {
+      errors.address = "Address is required!";
+    }
+
+    if (!formData.cheapestPrice) {
+      errors.cheapestPrice = "Price is required!";
+    } else if (isNaN(formData.cheapestPrice) || formData.cheapestPrice <= 0) {
+      errors.cheapestPrice = "Price must be a valid positive number!";
+    }
+
+    if (!formData.name) {
+      errors.name = "Name is required!";
+    }
+
+    if (!formData.city) {
+      errors.city = "City is required!";
+    }
+
+    if (!formData.distance) {
+      errors.distance = "Distance is required!";
+    } else if (isNaN(formData.distance) || formData.distance < 0) {
+      errors.distance = "Distance must be a valid non-negative number!";
+    }
+
+    if (!formData.desc) {
+      errors.desc = "Description is required!";
+    }
+
+    setErrors(errors);
+    return errors;
+  };
+
   return (
     <div className="new">
       <Sidebar />
       <div className="newContainer">
         <Navbar />
         <div className="top">
-          <h1>Add New Product</h1>
+          <h1>Add New Hotel</h1>
         </div>
         <div className="bottom">
           <div className="left">
@@ -98,6 +146,8 @@ const NewHotel = () => {
                     type={input.type}
                     placeholder={input.placeholder}
                   />
+                  {errors[input.id] && <p style={{ color: 'red' }}>{errors[input.id]}</p>}
+
                 </div>
               ))}
               <div className="formInput">
@@ -109,16 +159,13 @@ const NewHotel = () => {
               </div>
               <div className="selectRooms">
                 <label>Rooms</label>
-                <select id="rooms" multiple onChange={handleSelect}>
-                  {loading
-                    ? "loading"
-                    : data &&
-                    data.map((room) => (
-                      <option key={room._id} value={room._id}>
-                        {room.title}
-                      </option>
-                    ))}
-                </select>
+                <Select
+                  id="rooms"
+                  isMulti
+                  options={loading ? [] : data.map(room => ({ value: room._id, label: room.title }))}
+                  onChange={handleSelect}
+                  value={data ? data.filter(room => rooms.includes(room._id)).map(room => ({ value: room._id, label: room.title })) : []}
+                />
               </div>
               <button onClick={handleClick}>Send</button>
             </form>
