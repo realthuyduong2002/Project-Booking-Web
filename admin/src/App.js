@@ -41,22 +41,22 @@ function App() {
             />
             <Route path="users">
               <Route index element={
-              <ProtectedRoute>
-                  <List columns = {userColumns}/>
+                <ProtectedRoute>
+                  <List columns={userColumns} />
                 </ProtectedRoute>} />
-              <Route 
-              path=":userId" 
-              element={
-              <ProtectedRoute>
-                  <Single />
-                </ProtectedRoute>
-              } 
+              <Route
+                path=":userId"
+                element={
+                  <ProtectedRoute>
+                    <Single />
+                  </ProtectedRoute>
+                }
               />
               <Route
                 path="new"
                 element={
-                <ProtectedRoute>
-                  <New inputs={userInputs} title="Add New User" />
+                  <ProtectedRoute>
+                    <New inputs={userInputs} title="Add New User" />
                   </ProtectedRoute>}
               />
             </Route>
@@ -70,10 +70,10 @@ function App() {
                 }
               />
               <Route
-                path=":productId"
+                path=":hotelId"
                 element={
                   <ProtectedRoute>
-                    <Single />
+                    <Single entityType="hotels" />
                   </ProtectedRoute>
                 }
               />
@@ -81,7 +81,7 @@ function App() {
                 path="new"
                 element={
                   <ProtectedRoute>
-                    <NewHotel  />
+                    <NewHotel />
                   </ProtectedRoute>
                 }
               />
@@ -107,7 +107,7 @@ function App() {
                 path="new"
                 element={
                   <ProtectedRoute>
-                    <NewRoom  />
+                    <NewRoom />
                   </ProtectedRoute>
                 }
               />

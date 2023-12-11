@@ -6,6 +6,8 @@ import { useState } from "react";
 import { hotelInputs } from "../../formSource";
 import useFetch from "../../hooks/useFetch";
 import axios from "axios";
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 const NewHotel = () => {
   const [files, setFiles] = useState("");
@@ -20,11 +22,14 @@ const NewHotel = () => {
   };
 
   const handleSelect = (e) => {
-    const value = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setRooms(value);
+    setRooms(e.target.value);
+  };
+
+  const renderValue = (selected) => {
+    return selected.map((roomId) => {
+      const room = data.find((room) => room._id === roomId);
+      return room ? room.title : roomId;
+    }).join(', ');
   };
 
   console.log(files)
@@ -110,7 +115,7 @@ const NewHotel = () => {
       <div className="newContainer">
         <Navbar />
         <div className="top">
-          <h1>Add New Product</h1>
+          <h1>Add New Hotel</h1>
         </div>
         <div className="bottom">
           <div className="left">
@@ -160,16 +165,22 @@ const NewHotel = () => {
               </div>
               <div className="selectRooms">
                 <label>Rooms</label>
-                <select id="rooms" multiple onChange={handleSelect}>
+                <Select
+                  id="rooms"
+                  multiple
+                  value={rooms}
+                  onChange={handleSelect}
+                  renderValue={renderValue}
+                >
                   {loading
                     ? "loading"
                     : data &&
                     data.map((room) => (
-                      <option key={room._id} value={room._id}>
+                      <MenuItem key={room._id} value={room._id}>
                         {room.title}
-                      </option>
+                      </MenuItem>
                     ))}
-                </select>
+                </Select>
               </div>
               <button onClick={handleClick}>Send</button>
             </form>
