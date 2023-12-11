@@ -6,7 +6,6 @@ import { useState } from "react";
 import { hotelInputs } from "../../formSource";
 import useFetch from "../../hooks/useFetch";
 import axios from "axios";
-import Select from "react-select";
 
 const NewHotel = () => {
   const [files, setFiles] = useState("");
@@ -20,15 +19,18 @@ const NewHotel = () => {
     setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
-  const handleSelect = (selectedOptions) => {
-    setRooms(selectedOptions.map(option => option.value));
+  const handleSelect = (e) => {
+    const value = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setRooms(value);
   };
 
   console.log(files)
 
   const handleClick = async (e) => {
     e.preventDefault();
-
     // Validate the form
     const validationErrors = validateForm(info);
     if (Object.keys(validationErrors).length > 0) {
@@ -102,14 +104,13 @@ const NewHotel = () => {
     setErrors(errors);
     return errors;
   };
-
   return (
     <div className="new">
       <Sidebar />
       <div className="newContainer">
         <Navbar />
         <div className="top">
-          <h1>Add New Hotel</h1>
+          <h1>Add New Product</h1>
         </div>
         <div className="bottom">
           <div className="left">
@@ -159,13 +160,16 @@ const NewHotel = () => {
               </div>
               <div className="selectRooms">
                 <label>Rooms</label>
-                <Select
-                  id="rooms"
-                  isMulti
-                  options={loading ? [] : data.map(room => ({ value: room._id, label: room.title }))}
-                  onChange={handleSelect}
-                  value={data ? data.filter(room => rooms.includes(room._id)).map(room => ({ value: room._id, label: room.title })) : []}
-                />
+                <select id="rooms" multiple onChange={handleSelect}>
+                  {loading
+                    ? "loading"
+                    : data &&
+                    data.map((room) => (
+                      <option key={room._id} value={room._id}>
+                        {room.title}
+                      </option>
+                    ))}
+                </select>
               </div>
               <button onClick={handleClick}>Send</button>
             </form>
