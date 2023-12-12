@@ -1,8 +1,8 @@
+import React, { useState } from "react";
 import "./newHotel.scss";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import { useState } from "react";
 import { hotelInputs } from "../../formSource";
 import useFetch from "../../hooks/useFetch";
 import axios from "axios";
@@ -14,6 +14,8 @@ const NewHotel = () => {
   const [info, setInfo] = useState({});
   const [rooms, setRooms] = useState([]);
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const { data, loading, error } = useFetch("http://localhost:8800/api/rooms");
 
@@ -32,14 +34,14 @@ const NewHotel = () => {
     }).join(', ');
   };
 
-  console.log(files)
-
   const handleClick = async (e) => {
     e.preventDefault();
     // Validate the form
     const validationErrors = validateForm(info);
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      setSuccessMessage("");
+      setErrorMessage("Some fields not entered correctly");
       return;
     }
     try {
@@ -65,8 +67,18 @@ const NewHotel = () => {
       };
 
       await axios.post("http://localhost:8800/api/hotels", newhotel);
-    } catch (err) { console.log(err) }
+      setSuccessMessage("Hotel added successfully");
+      setErrorMessage("");
+      // Optionally, you can reset the form or perform any other action after success
+      // setInfo({}); // Reset the form data
+      // setRooms([]); // Reset the rooms
+    } catch (err) {
+      console.log(err);
+      setErrorMessage("Error adding hotel");
+      setSuccessMessage("");
+    }
   };
+
   const validateForm = (formData) => {
     const errors = {};
 
@@ -109,6 +121,7 @@ const NewHotel = () => {
     setErrors(errors);
     return errors;
   };
+
   return (
     <div className="new">
       <Sidebar />
@@ -153,7 +166,6 @@ const NewHotel = () => {
                     placeholder={input.placeholder}
                   />
                   {errors[input.id] && <p style={{ color: 'red' }}>{errors[input.id]}</p>}
-
                 </div>
               ))}
               <div className="formInput">
@@ -183,6 +195,11 @@ const NewHotel = () => {
                 </Select>
               </div>
               <button onClick={handleClick}>Send</button>
+
+              {successMessage && (
+                <p style={{ color: "green" }}>{successMessage}</p>
+              )}
+              {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
             </form>
           </div>
         </div>
