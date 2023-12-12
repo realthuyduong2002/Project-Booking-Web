@@ -12,6 +12,9 @@ import { AuthContext } from "./context/AuthContext";
 import { hotelColumns, roomColumns, userColumns } from "./datatablesource";
 import NewHotel from "./pages/newHotel/NewHotel";
 import NewRoom from "./pages/newRoom/NewRoom";
+import HotelDetail from "./pages/Hoteldetail/HotelDetail";
+import RoomDetail from "./pages/Roomdetail/RoomDetail";
+import UserDetail from "./pages/Userdetail/UserDetail";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -48,7 +51,7 @@ function App() {
                 path=":userId"
                 element={
                   <ProtectedRoute>
-                    <Single />
+                    <UserDetail />
                   </ProtectedRoute>
                 }
               />
@@ -73,7 +76,7 @@ function App() {
                 path=":hotelId"
                 element={
                   <ProtectedRoute>
-                    <Single entityType="hotels" />
+                    <HotelDetail entityType="hotels" />
                   </ProtectedRoute>
                 }
               />
@@ -96,10 +99,10 @@ function App() {
                 }
               />
               <Route
-                path=":productId"
+                path=":roomId"
                 element={
                   <ProtectedRoute>
-                    <Single />
+                    <RoomDetail />
                   </ProtectedRoute>
                 }
               />
