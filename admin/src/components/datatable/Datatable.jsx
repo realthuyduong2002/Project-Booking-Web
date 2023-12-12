@@ -36,6 +36,11 @@ const Datatable = ({ columns }) => {
             <Link to={`/${path}/${params.row._id}`} style={{ textDecoration: "none" }}>
               <div className="viewButton">View</div>
             </Link>
+            <Link to={`/${path}/${params.row._id}/update`} style={{ textDecoration: "none" }}>
+              <div className="updateButton" onClick={() => handleUpdate(params.row._id)}>
+                Update
+              </div>
+            </Link>
             <div
               className="deleteButton"
               onClick={() => handleDelete(params.row._id)}
@@ -47,6 +52,11 @@ const Datatable = ({ columns }) => {
       },
     },
   ];
+  const handleUpdate = (id) => {
+    // Add logic for handling the update action
+    console.log(`Update button clicked for ID: ${id}`);
+  };
+
   return (
     <div className="datatable">
       <div className="datatableTitle">

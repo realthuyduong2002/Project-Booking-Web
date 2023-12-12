@@ -4,7 +4,7 @@ import axios from "axios";
 import "./userdetail.scss"; // Import the stylesheet for UserDetail
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-
+import UpdateUser from "../updateuser/UpdateUser";
 const UserDetail = () => {
     const { userId } = useParams();
     const [userData, setUserData] = useState(null);
@@ -73,6 +73,7 @@ const UserDetail = () => {
                 </div>
             </div>
         </div>
+
     );
 };
 

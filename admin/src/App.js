@@ -15,7 +15,7 @@ import NewRoom from "./pages/newRoom/NewRoom";
 import HotelDetail from "./pages/Hoteldetail/HotelDetail";
 import RoomDetail from "./pages/Roomdetail/RoomDetail";
 import UserDetail from "./pages/Userdetail/UserDetail";
-
+import UpdateUser from "./pages/updateuser/UpdateUser";
 function App() {
   const { darkMode } = useContext(DarkModeContext);
 
@@ -61,6 +61,14 @@ function App() {
                   <ProtectedRoute>
                     <New inputs={userInputs} title="Add New User" />
                   </ProtectedRoute>}
+              />
+              <Route
+                path=":userId/update"
+                element={
+                  <ProtectedRoute>
+                    <UpdateUser inputs={userInputs} title="Update User" />
+                  </ProtectedRoute>
+                }
               />
             </Route>
             <Route path="hotels">
