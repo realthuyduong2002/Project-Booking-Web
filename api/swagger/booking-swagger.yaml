@@ -1,0 +1,617 @@
+openapi: 3.0.3
+info:
+  title: Swagger Petstore - OpenAPI 3.0
+  description: |-
+    This is a sample Pet Store Server based on the OpenAPI 3.0 specification.  You can find out more about
+    Swagger at [https://swagger.io](https://swagger.io). In the third iteration of the pet store, we've switched to the design first approach!
+    You can now help us improve the API whether it's by making changes to the definition itself or to the code.
+    That way, with time, we can improve the API in general, and expose some of the new features in OAS3.
+
+    _If you're looking for the Swagger 2.0/OAS 2.0 version of Petstore, then click [here](https://editor.swagger.io/?url=https://petstore.swagger.io/v2/swagger.yaml). Alternatively, you can load via the `Edit > Load Petstore OAS 2.0` menu option!_
+
+    Some useful links:
+    - [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)
+    - [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+  - url: http://localhost:8800
+tags:
+  - name: auth
+    description: Logs in a user.
+paths:
+  /api/auth/login:
+    post:
+      tags:
+        - auth
+      summary: Login an existing user
+      description: Login into system
+      operationId: login
+      requestBody:
+        description: Information login
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  description: The user's username
+                  example: su
+                password:
+                  type: string
+                  description: The user's password
+                  example: 123
+        required: true
+      responses:
+        200:
+          description: "Login successful."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      username:
+                        type: string
+                      email:
+                        type: string
+                      isAdmin:
+                        type: boolean
+        400:
+          description: "Bad request."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The error message.
+        404:
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: The error message.
+        403:
+          description: "User is forbidden."
+        401:
+          description: "User is unauthorized."
+  /api/auth/register:
+    post:
+      tags:
+        - "auth"
+      summary: "Register a new user."
+      description: "This endpoint allows users to register new accounts."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: "The user's username."
+                email:
+                  type: string
+                  description: "The user's email address."
+                password:
+                  type: string
+                  description: "The user's password."
+      responses:
+        201:
+          description: "User has been created."
+        400:
+          description: "Bad request."
+        500:
+          description: "Internal server error."
+
+  /api/hotels:
+    post:
+      summary: Create a new hotel
+      tags:
+        - "hotels"
+      requestBody:
+        description: Hotel details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Hotel"
+      responses:
+        "200":
+          description: Successfully created hotel
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hotel"
+    get:
+      summary: Get all hotels
+      tags:
+        - "hotels"
+      responses:
+        200:
+          description: Successfully retrieved list of hotels
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Hotel"
+
+  /api/hotels/find/{id}:
+    get:
+      summary: Get hotel details by ID
+      tags:
+        - "hotels"
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID require
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully retrieved hotel details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hotel"
+  /api/hotels/{id}:
+    put:
+      summary: Update hotel details by ID
+      tags:
+        - "hotels"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          description: The ID of the hotel
+          schema:
+            type: string
+        - in: "header"
+          name: "Authorization"
+          required: true
+          schema:
+            type: string
+          description: Bearer token for authentication
+      requestBody:
+        description: Updated hotel details
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Hotel"
+      responses:
+        200:
+          description: Successfully updated hotel details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hotel"
+
+    delete:
+      summary: Delete hotel by ID
+      tags:
+        - "hotels"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          description: The ID of the hotel
+          schema:
+            type: string
+        - in: "header"
+          name: "Authorization"
+          required: true
+          schema:
+            type: string
+          description: Bearer token for authentication
+      responses:
+        200:
+          description: Hotel successfully deleted
+  /api/hotels/rooms/{id}:
+    get:
+      summary: Get rooms of a specific hotel
+      tags:
+        - "hotels"
+      parameters:
+        - name: "hotelID"
+          in: "path"
+          required: true
+          description: The ID of the hotel
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully retrieved list of rooms for the hotel
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Room"
+  /api/rooms/{hotelid}:
+    post:
+      tags:
+        - "rooms"
+      summary: Create a new room.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the room to be updated.
+          schema:
+            type: string
+      requestBody:
+        description: Updated room object.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Room"
+
+      responses:
+        200:
+          description: Successfully created room.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized.
+
+  /api/rooms/{id}/{hotelid}:
+    delete:
+      tags:
+        - "rooms"
+      summary: Delete a room by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the room to be deleted.
+          schema:
+            type: string
+        - in: path
+          name: hotelid
+          required: true
+          description: The ID of the hotel from which the room should be deleted.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Room has been deleted.
+        401:
+          description: Unauthorized
+        404:
+          description: Room not found
+
+  /api/rooms/{id}:
+    put:
+      tags:
+        - "rooms"
+      summary: Update a room by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the room to be updated.
+          schema:
+            type: string
+      requestBody:
+        description: Updated room object.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Room"
+      responses:
+        200:
+          description: Successfully updated room.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized
+    get:
+      tags:
+        - "rooms"
+      summary: Get a room by ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the room to be retrieved.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully retrieved room.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Room"
+        401:
+          description: Unauthorized
+        404:
+          description: Room not found
+  /api/rooms:
+    get:
+      tags:
+        - "rooms"
+      summary: Get all rooms.
+      operationId: getAllRooms
+      responses:
+        200:
+          description: Successfully retrieved all rooms.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Room"
+        401:
+          description: Unauthorized
+  /api/rooms/{id}/availability:
+    put:
+      tags:
+        - "rooms"
+      summary: Update room availability by ID.
+      operationId: updateRoomAvailabilityById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the room to update availability.
+          schema:
+            type: string
+      requestBody:
+        description: Updated availability object.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dates:
+                  type: array
+                  items:
+                    type: string
+                    format: date
+              required:
+                - dates
+      responses:
+        200:
+          description: Room availability has been updated.
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized
+        404:
+          description: Room not found
+  /api/users/{id}:
+    put:
+      tags:
+        - "users"
+      summary: Update a user by ID.
+      operationId: updateUserById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the user to be updated.
+          schema:
+            type: string
+      requestBody:
+        description: Updated user object.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        200:
+          description: Successfully updated user.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Bad request.
+        401:
+          description: Unauthorized
+        404:
+          description: User not found
+
+    delete:
+      tags:
+        - "users"
+      summary: Delete a user by ID.
+      operationId: deleteUserById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the user to be deleted.
+          schema:
+            type: string
+      responses:
+        200:
+          description: User has been deleted.
+        401:
+          description: Unauthorized
+        404:
+          description: User not found
+    get:
+      tags:
+        - "users"
+      summary: Get a user by ID.
+      operationId: getUserById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The ID of the user to be retrieved.
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully retrieved user.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        401:
+          description: Unauthorized
+        404:
+          description: User not found
+
+  /api/users:
+    get:
+      tags:
+        - "users"
+      summary: Get all users.
+      operationId: getAllUsers
+      responses:
+        200:
+          description: Successfully retrieved all users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        401:
+          description: Unauthorized
+components:
+  schemas:
+    Room:
+      type: object
+      properties:
+        title:
+          type: string
+          description: The title of the room.
+        price:
+          type: number
+          description: The price of the room.
+        maxPeople:
+          type: number
+          description: The maximum number of people the room can accommodate.
+        desc:
+          type: string
+          description: The description of the room.
+        roomNumbers:
+          type: array
+          description: List of room numbers with their unavailable dates.
+          items:
+            type: object
+            properties:
+              number:
+                type: number
+                description: The room number.
+              unavailableDates:
+                type: array
+                items:
+                  type: string
+                  format: date
+                description: List of dates when the room is unavailable.
+
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        isAdmin:
+          type: boolean
+      required:
+        - username
+        - email
+        - password
+    Hotel:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the hotel.
+        type:
+          type: string
+          description: The type of the hotel (e.g., hotel, apartment, resort).
+        city:
+          type: string
+          description: The city where the hotel is located.
+        address:
+          type: string
+          description: The address of the hotel.
+        distance:
+          type: string
+          description: The distance of the hotel from a specific point.
+        photos:
+          type: array
+          items:
+            type: string
+          description: An array of photo URLs for the hotel.
+        title:
+          type: string
+          description: The title of the hotel.
+        desc:
+          type: string
+          description: A description of the hotel.
+        rating:
+          type: number
+          minimum: 0
+          maximum: 5
+          description: The rating of the hotel (between 0 and 5).
+        rooms:
+          type: array
+          items:
+            type: string
+          description: An array of Room IDs associated with the hotel.
+        cheapestPrice:
+          type: number
+          description: The cheapest price for the hotel.
+        featured:
+          type: boolean
+          default: false
+          description: Whether the hotel is featured or not.
+      required:
+        - name
+        - type
+        - city
+        - address
+        - distance
+        - title
+        - desc
+        - cheapestPrice
